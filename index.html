@@ -15,6 +15,9 @@
             --text-secondary: #ccccff;
             --success: #00cc88;
             --error: #ff3366;
+            --info-rep: #ff9966;
+            --multimedia: #9966cc;
+            --files: #66cc99;
         }
         
         * {
@@ -30,6 +33,7 @@
             min-height: 100vh;
             padding: 20px;
             line-height: 1.6;
+            overflow-x: hidden;
         }
         
         header {
@@ -49,6 +53,55 @@
             background-clip: text;
             color: transparent;
             text-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+        
+        .topic-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .topic-btn {
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .topic-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .topic-btn.active {
+            box-shadow: 0 0 10px currentColor;
+        }
+        
+        .topic-btn.info-rep {
+            background-color: var(--info-rep);
+            color: var(--primary-bg);
+        }
+        
+        .topic-btn.multimedia {
+            background-color: var(--multimedia);
+            color: var(--primary-bg);
+        }
+        
+        .topic-btn.files {
+            background-color: var(--files);
+            color: var(--primary-bg);
+        }
+        
+        .topic-btn.all {
+            background: var(--accent-blue);
+            color: var(--primary-bg);
         }
         
         .tabs {
@@ -93,6 +146,8 @@
             margin-bottom: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             display: none;
+            max-height: calc(100vh - 250px);
+            overflow-y: auto;
         }
         
         .content-section.active {
@@ -144,11 +199,13 @@
             border-radius: 15px;
             background: linear-gradient(145deg, #1f1f4a, #25255a);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
         }
         
         .flashcard-back {
             transform: rotateY(180deg);
             text-align: left;
+            justify-content: flex-start;
         }
         
         .term {
@@ -341,6 +398,30 @@
             margin-top: 15px;
             color: var(--text-secondary);
         }
+        
+        .tag-indicator {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .tag-info-rep {
+            background-color: var(--info-rep);
+            color: var(--primary-bg);
+        }
+        
+        .tag-multimedia {
+            background-color: var(--multimedia);
+            color: var(--primary-bg);
+        }
+        
+        .tag-files {
+            background-color: var(--files);
+            color: var(--primary-bg);
+        }
 
         @media (max-width: 768px) {
             .options {
@@ -354,6 +435,125 @@
             .knowledge-buttons {
                 flex-direction: column;
             }
+            
+            .flashcard {
+                height: 200px;
+            }
+            
+            .term {
+                font-size: 1.5rem;
+            }
+            
+            .definition {
+                font-size: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .content-section {
+                max-height: calc(100vh - 200px);
+                padding: 15px;
+            }
+            
+            .topic-btn {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .flashcard {
+                height: 180px;
+            }
+            
+            .term {
+                font-size: 1.3rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-buttons button {
+                width: 100%;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .topic-filter {
+                gap: 5px;
+            }
+            
+            .topic-btn {
+                font-size: 0.7rem;
+                padding: 5px 10px;
+            }
+        }
+
+        /* Orientation-specific adjustments */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .content-section {
+                max-height: calc(100vh - 180px);
+            }
+            
+            .flashcard {
+                height: 180px;
+            }
+            
+            header {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue-dark);
         }
     </style>
 </head>
@@ -364,6 +564,14 @@
     </header>
     
     <div class="container">
+        <!-- Topic Filter Section -->
+        <div class="topic-filter">
+            <button class="topic-btn all active" data-topic="all">All Topics</button>
+            <button class="topic-btn info-rep" data-topic="Information Representation">Information Representation</button>
+            <button class="topic-btn multimedia" data-topic="Multimedia">Multimedia</button>
+            <button class="topic-btn files" data-topic="Files">Files</button>
+        </div>
+        
         <div class="tabs">
             <button class="tab-btn active" data-tab="flashcards">Flashcards</button>
             <button class="tab-btn" data-tab="multiple-choice">Multiple Choice</button>
@@ -470,7 +678,7 @@
     </div>
 
     <script>
-        // Study data
+        // Study data with tags
         const studyData = [
             {
                 term: "Binary Coded Decimal (BCD)",
@@ -478,46 +686,53 @@
                 details: "Only digits 0-9 are converted to BCD because digits greater than 9 are not valid in BCD.",
                 example: "To represent 429 in BCD: 4 = 0100, 2 = 0010, 9 = 1001, concatenated as 0100 0010 1001.",
                 applications: "Used in electronic devices displaying numbers (e.g., calculators), accurately measuring decimal fractions, and coding denary numbers electronically.",
-                extraNote: "If a nibble is greater than 9, add 6 (0110) to correct the BCD representation."
+                extraNote: "If a nibble is greater than 9, add 6 (0110) to correct the BCD representation.",
+                tags: ["Information Representation"]
             },
             {
                 term: "Two's Complement",
                 definition: "A method to represent negative numbers in binary by using the most significant bit (MSB) as a sign bit.",
                 conversion: "To convert -42 to 8-bit two's complement: 42 in binary = 00101010, flip bits = 11010101, add 1 = 11010110.",
                 reverseConversion: "To convert 11010110 back to denary: flip bits = 00101001, add 1 = 00101010, which is 42, so the number is -42.",
-                range: "Maximum positive number in 8 bits: 127; maximum negative number: -128."
+                range: "Maximum positive number in 8 bits: 127; maximum negative number: -128.",
+                tags: ["Information Representation"]
             },
             {
                 term: "Hexadecimal Systems - Base 16",
                 definition: "Number system with digits 0-9 and letters A-F representing values 10-15.",
                 applications: "Used in HTML color codes, MAC addresses, assembly languages, machine code, and debugging memory dumps.",
-                examples: "A5 in denary = (16×10) + (1×5) = 165; 65 in hex = 41 (4×16 + 1)."
+                examples: "A5 in denary = (16×10) + (1×5) = 165; 65 in hex = 41 (4×16 + 1).",
+                tags: ["Information Representation"]
             },
             {
                 term: "Character Sets",
                 definition: "Includes letters, digits, punctuation, and other characters represented by binary codes via character encoding.",
                 standards: "ASCII (7 bits, 128 chars, English alphabet), Extended ASCII (8 bits, 256 chars, European alphabets), Unicode (2 or 4 bytes, global languages).",
-                tradeoff: "ASCII uses less storage; Unicode supports more characters but uses more storage."
+                tradeoff: "ASCII uses less storage; Unicode supports more characters but uses more storage.",
+                tags: ["Information Representation"]
             },
             {
                 term: "Bitmap Images",
                 definition: "Images created by assigning a solid color to each pixel using bit patterns.",
                 encoding: "Bit patterns correspond to each pixel's color and are mapped onto memory.",
                 pixels: "Pixels are the smallest picture elements represented by binary color codes.",
-                fileHeader: "Contains metadata like image size and number of colors."
+                fileHeader: "Contains metadata like image size and number of colors.",
+                tags: ["Multimedia", "Files"]
             },
             {
                 term: "Image Resolution",
                 definition: "Number of pixels that make up an image.",
                 formula: "Number of pixels = width × height",
                 example: "4096×3192 pixels",
-                effect: "Higher resolution results in sharper, more detailed images."
+                effect: "Higher resolution results in sharper, more detailed images.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Screen Resolution",
                 definition: "Number of pixels viewable horizontally and vertically on a device's screen.",
                 formula: "Number of pixels = width × height",
-                example: "1680 × 1080 pixels"
+                example: "1680 × 1080 pixels",
+                tags: ["Multimedia"]
             },
             {
                 term: "Colour Depth",
@@ -525,7 +740,8 @@
                 formula: "An image with n bits has 2^n colours per pixel",
                 example: "A 16-color bitmap has 4 bits per pixel because 2^4 = 16",
                 effect: "Increasing color depth improves color quality but increases file size.",
-                fileSize: "File Size = Number of Pixels × Color Depth (bits). Convert bits to bytes by dividing by 8."
+                fileSize: "File Size = Number of Pixels × Color Depth (bits). Convert bits to bytes by dividing by 8.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Vector Graphics",
@@ -534,99 +750,117 @@
                 properties: "Basic geometric data determine shape and appearance.",
                 encoding: "Encoded using mathematical formulas to draw lines and curves.",
                 scalability: "Can be resized without losing quality.",
-                applications: "Used for logos and graphics requiring scaling."
+                applications: "Used for logos and graphics requiring scaling.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Sound",
                 analogueVsDigital: "Analogue data is continuous electrical signals; digital data is discrete signals.",
                 soundSignals: "Sound is vibration through a medium, inherently analogue.",
-                conversion: "Analogue signals are sampled at intervals; samples encoded as binary numbers representing amplitude."
+                conversion: "Analogue signals are sampled at intervals; samples encoded as binary numbers representing amplitude.",
+                tags: ["Multimedia"]
             },
             {
                 term: "How Sound is Sampled & Stored",
                 definition: "Measurements of the original sound wave are captured and stored as binary on secondary storage.",
                 details: "Sound waves begin as analogue and for a computer system to understand them they must be converted into a digital form. This process is called Analogue to Digital conversion (A2D).",
                 process: "The process begins by measuring the amplitude of the analogue sound wave at a point in time, called samples. Each measurement (sample) generates a value which can be represented in binary and stored.",
-                result: "Using the samples, a computer is able to create a digital version of the original analogue wave. The digital wave is stored on secondary storage and can be played back at any time by reversing the process."
+                result: "Using the samples, a computer is able to create a digital version of the original analogue wave. The digital wave is stored on secondary storage and can be played back at any time by reversing the process.",
+                tags: ["Multimedia", "Files"]
             },
             {
                 term: "Sample Rate",
                 definition: "Sample rate is the amount of samples taken per second of the analogue wave.",
-                details: "Samples are taken each second for the duration of the sound. The sample rate is measured in Hertz (Hz). 1 Hertz is equal to 1 sample of the sound wave."
+                details: "Samples are taken each second for the duration of the sound. The sample rate is measured in Hertz (Hz). 1 Hertz is equal to 1 sample of the sound wave.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Sample Resolution",
                 definition: "Sample resolution is the number of bits stored per sample of sound.",
-                details: "Sample resolution is closely related to the colour depth of a bitmap image; they measure the same thing in different contexts."
+                details: "Sample resolution is closely related to the colour depth of a bitmap image; they measure the same thing in different contexts.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Sampling Rate",
                 definition: "Number of samples taken per unit time.",
-                effect: "Higher sampling rate improves accuracy but increases file size."
+                effect: "Higher sampling rate improves accuracy but increases file size.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Sampling Resolution",
                 definition: "Number of bits used to encode each sample.",
-                effect: "Higher resolution improves accuracy but increases file size."
+                effect: "Higher resolution improves accuracy but increases file size.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Bit Rate",
                 definition: "Number of bits used to store 1 second of sound.",
                 formula: "Bit Rate = Sampling Rate × Sampling Resolution",
-                length: "Length of sound measured in seconds."
+                length: "Length of sound measured in seconds.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Compression",
                 definition: "Process of reducing file size without significant quality loss.",
-                benefits: "Faster data transfer, less bandwidth, reduced search time."
+                benefits: "Faster data transfer, less bandwidth, reduced search time.",
+                tags: ["Files"]
             },
             {
                 term: "Lossless Compression",
                 definition: "Compression allowing perfect reconstruction of original data.",
                 examples: "Bitmap (.bmp), vector graphics (.svg), PNG images, text file compression, database records.",
-                runLengthEncoding: "Encodes sequences of identical elements as run count and run value."
+                runLengthEncoding: "Encodes sequences of identical elements as run count and run value.",
+                tags: ["Files"]
             },
             {
                 term: "Lossy Compression",
                 definition: "Compression that irreversibly removes unnecessary data.",
                 effect: "Lower quality than lossless but much smaller file size (about 10%).",
                 examples: "Sound files (.mp3), JPEG images.",
-                mechanism: "Perceptual coding removes less audible parts of sound."
+                mechanism: "Perceptual coding removes less audible parts of sound.",
+                tags: ["Files"]
             },
             {
                 term: "ASCII Code",
                 definition: "Character encoding standard for electronic communication for English. This is 7 or 8 bits long.",
-                details: "ASCII stands for American Standard Code for Information Interchange. It represents text in computers and other devices that use text."
+                details: "ASCII stands for American Standard Code for Information Interchange. It represents text in computers and other devices that use text.",
+                tags: ["Information Representation"]
             },
             {
                 term: "Unicode",
                 definition: "Character encoding standard that supports a wide range of characters and symbols, it has most language support. This is typically 16 bits long.",
-                details: "Unicode aims to provide a unique code point for every character, regardless of platform, program, or language."
+                details: "Unicode aims to provide a unique code point for every character, regardless of platform, program, or language.",
+                tags: ["Information Representation"]
             },
             {
                 term: "File Header",
                 definition: "Metadata at the beginning of a file that describes its format and content.",
-                details: "File headers typically include information such as file type, size, and encoding such as coordinate data of pixels."
+                details: "File headers typically include information such as file type, size, and encoding such as coordinate data of pixels.",
+                tags: ["Files"]
             },
             {
                 term: "Properties of a vector graphic",
                 definition: "It has the Data of the shapes as it defines one aspect of the drawing, for instance the font size of a text.",
-                details: "Vector graphics are based on mathematical expressions and can be scaled without loss of quality. They are typically composed of paths, strokes, and fills."
+                details: "Vector graphics are based on mathematical expressions and can be scaled without loss of quality. They are typically composed of paths, strokes, and fills.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Drawing List of a vector graphic",
                 definition: "It is the list of all the shapes included in an image or the description of how to draw the image.",
-                details: "The drawing list contains all the necessary information/properties to recreate the image, including the shapes, colors, and their positions."
+                details: "The drawing list contains all the necessary information/properties to recreate the image, including the shapes, colors, and their positions.",
+                tags: ["Multimedia"]
             },
             {
                 term: "Two's Complement Binary to denary conversion",
                 definition: "It is a method for representing signed integers in binary form. Flip bits and add 1 to convert negative numbers",
-                details: "In Two's Complement, the most significant bit indicates the sign (0 for positive, 1 for negative). To convert to denary, invert the bits and add 1 for negative numbers."
+                details: "In Two's Complement, the most significant bit indicates the sign (0 for positive, 1 for negative). To convert to denary, invert the bits and add 1 for negative numbers.",
+                tags: ["Information Representation"]
             },
             {
                 term: "Two's Complement Denary to Binary conversion",
                 definition: "You subtract 1 and flip the bits to convert a negative denary number to Two's Complement binary",
-                details: "In Two's Complement, the most significant bit indicates the sign (0 for positive, 1 for negative). To convert to Binary, subtract 1 and invert the bits for negative numbers."
+                details: "In Two's Complement, the most significant bit indicates the sign (0 for positive, 1 for negative). To convert to Binary, subtract 1 and invert the bits for negative numbers.",
+                tags: ["Information Representation"]
             },
         ];
 
@@ -634,6 +868,7 @@
         let currentCardIndex = 0;
         let currentMCIndex = 0;
         let currentTextIndex = 0;
+        let selectedTopic = "all";
         
         // Track known and unknown cards
         let knownCards = new Set();
@@ -646,11 +881,12 @@
         let selectedDefinition = null;
         let matches = {};
         
-        // NEW: Track current matching set
+        // Track current matching set
         let currentMatchingSet = [];
         let currentMCSet = [];
 
         // DOM elements
+        const topicButtons = document.querySelectorAll('.topic-btn');
         const tabButtons = document.querySelectorAll('.tab-btn');
         const contentSections = document.querySelectorAll('.content-section');
         const flashcard = document.querySelector('.flashcard');
@@ -689,6 +925,14 @@
         
         const revisionContent = document.getElementById('revision-content');
 
+        // Filter study data based on selected topic
+        function getFilteredStudyData() {
+            if (selectedTopic === "all") {
+                return studyData;
+            }
+            return studyData.filter(item => item.tags.includes(selectedTopic));
+        }
+
         // Utility function to shuffle array (Fisher-Yates algorithm)
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -698,8 +942,15 @@
             return array;
         }
 
-        // NEW: Generate a random matching set
+        // Generate a random matching set
         function generateMatchingSet() {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length < 3) {
+                termsColumn.innerHTML = '<p>Not enough items for matching with current filter</p>';
+                definitionsColumn.innerHTML = '';
+                return;
+            }
+            
             // Reset matches
             matches = {};
             selectedTerm = null;
@@ -710,11 +961,12 @@
             termsColumn.innerHTML = '';
             definitionsColumn.innerHTML = '';
             
-            // Create a copy of studyData and shuffle it
-            const shuffledData = shuffleArray([...studyData]);
+            // Create a copy of filtered data and shuffle it
+            const shuffledData = shuffleArray([...filteredData]);
             
-            // Take first 5 items for matching
-            currentMatchingSet = shuffledData.slice(0, 5);
+            // Take first 5 items for matching (or fewer if not enough)
+            const itemCount = Math.min(5, filteredData.length);
+            currentMatchingSet = shuffledData.slice(0, itemCount);
             
             // Create term elements
             currentMatchingSet.forEach((item, index) => {
@@ -739,15 +991,22 @@
             setupMatching();
         }
 
-        // NEW: Generate a random multiple choice question
+        // Generate a random multiple choice question
         function generateMCQuestion() {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) {
+                mcQuestion.textContent = "No questions available with current filter";
+                mcOptions.innerHTML = '';
+                return;
+            }
+            
             // Clear previous options
             mcOptions.innerHTML = '';
             mcResult.style.display = 'none';
             
-            // Select a random term from studyData
-            const randomIndex = Math.floor(Math.random() * studyData.length);
-            const correctItem = studyData[randomIndex];
+            // Select a random term from filtered data
+            const randomIndex = Math.floor(Math.random() * filteredData.length);
+            const correctItem = filteredData[randomIndex];
             
             // Set the question
             mcQuestion.textContent = `What is the definition of "${correctItem.term}"?`;
@@ -762,12 +1021,17 @@
             const incorrectOptions = [];
             const usedIndices = new Set([randomIndex]);
             
-            while (incorrectOptions.length < 3) {
-                const randomIdx = Math.floor(Math.random() * studyData.length);
+            while (incorrectOptions.length < 3 && usedIndices.size < filteredData.length) {
+                const randomIdx = Math.floor(Math.random() * filteredData.length);
                 if (!usedIndices.has(randomIdx)) {
-                    incorrectOptions.push(studyData[randomIdx].definition);
+                    incorrectOptions.push(filteredData[randomIdx].definition);
                     usedIndices.add(randomIdx);
                 }
+            }
+            
+            // If we don't have enough incorrect options, add some generic ones
+            while (incorrectOptions.length < 3) {
+                incorrectOptions.push("No information available");
             }
             
             // Combine and shuffle options
@@ -789,6 +1053,38 @@
                 mcOptions.appendChild(optionElement);
             });
         }
+
+        // Topic filtering functionality
+        topicButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const topic = button.getAttribute('data-topic');
+                
+                // Update active topic button
+                topicButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Set selected topic
+                selectedTopic = topic;
+                
+                // Reset study progress for new filtered set
+                currentCardIndex = 0;
+                knownCards.clear();
+                unknownCards = [];
+                isReviewingUnknown = false;
+                reviewIndex = 0;
+                
+                // Update all study sections with filtered data
+                updateFlashcard();
+                generateMatchingSet();
+                generateMCQuestion();
+                updateTextQuestion();
+                
+                // If revision tab is active, regenerate content
+                if (document.getElementById('revision').classList.contains('active')) {
+                    generateRevisionContent();
+                }
+            });
+        });
 
         // Tab switching functionality
         tabButtons.forEach(button => {
@@ -822,6 +1118,16 @@
 
         // Flashcard functionality
         function updateFlashcard() {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) {
+                currentTerm.textContent = "No flashcards available with current filter";
+                currentDefinition.textContent = "Try selecting a different topic";
+                cardCounter.textContent = `Card 0 of 0`;
+                progressFill.style.width = `0%`;
+                sessionStats.textContent = `Known: 0/0 | To Review: 0`;
+                return;
+            }
+            
             let index;
             if (isReviewingUnknown) {
                 index = unknownCards[reviewIndex];
@@ -829,7 +1135,7 @@
                 index = currentCardIndex;
             }
             
-            const currentData = studyData[index];
+            const currentData = filteredData[index];
             currentTerm.textContent = currentData.term;
             
             let definitionHTML = currentData.definition;
@@ -859,15 +1165,15 @@
             if (isReviewingUnknown) {
                 cardCounter.textContent = `Review Card ${reviewIndex + 1} of ${unknownCards.length}`;
             } else {
-                cardCounter.textContent = `Card ${currentCardIndex + 1} of ${studyData.length}`;
+                cardCounter.textContent = `Card ${currentCardIndex + 1} of ${filteredData.length}`;
             }
             
             // Update progress bar
-            const progressPercentage = (knownCards.size / studyData.length) * 100;
+            const progressPercentage = (knownCards.size / filteredData.length) * 100;
             progressFill.style.width = `${progressPercentage}%`;
             
             // Update session stats
-            sessionStats.textContent = `Known: ${knownCards.size}/${studyData.length} | To Review: ${unknownCards.length}`;
+            sessionStats.textContent = `Known: ${knownCards.size}/${filteredData.length} | To Review: ${unknownCards.length}`;
         }
 
         flashcard.addEventListener('click', () => {
@@ -876,6 +1182,9 @@
 
         // Handle "I Know This" button
         knowButton.addEventListener('click', () => {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) return;
+            
             let index;
             if (isReviewingUnknown) {
                 index = unknownCards[reviewIndex];
@@ -888,7 +1197,7 @@
                 if (unknownCards.length === 0) {
                     isReviewingUnknown = false;
                     reviewIndex = 0;
-                    currentCardIndex = (currentCardIndex + 1) % studyData.length;
+                    currentCardIndex = (currentCardIndex + 1) % filteredData.length;
                 } else {
                     // Stay in review mode but move to next card
                     reviewIndex = reviewIndex % unknownCards.length;
@@ -901,7 +1210,7 @@
                 if (unknownIndex !== -1) {
                     unknownCards.splice(unknownIndex, 1);
                 }
-                currentCardIndex = (currentCardIndex + 1) % studyData.length;
+                currentCardIndex = (currentCardIndex + 1) % filteredData.length;
                 
                 // If we've completed all cards and there are unknown ones, start reviewing
                 if (currentCardIndex === 0 && unknownCards.length > 0) {
@@ -916,6 +1225,9 @@
 
         // Handle "I Don't Know" button
         dontKnowButton.addEventListener('click', () => {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) return;
+            
             let index;
             if (isReviewingUnknown) {
                 index = unknownCards[reviewIndex];
@@ -931,7 +1243,7 @@
                 if (knownCards.has(index)) {
                     knownCards.delete(index);
                 }
-                currentCardIndex = (currentCardIndex + 1) % studyData.length;
+                currentCardIndex = (currentCardIndex + 1) % filteredData.length;
                 
                 // If we've completed all cards, start reviewing unknown ones
                 if (currentCardIndex === 0 && unknownCards.length > 0) {
@@ -945,20 +1257,26 @@
         });
 
         prevCardButton.addEventListener('click', () => {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) return;
+            
             if (isReviewingUnknown) {
                 reviewIndex = (reviewIndex - 1 + unknownCards.length) % unknownCards.length;
             } else {
-                currentCardIndex = (currentCardIndex - 1 + studyData.length) % studyData.length;
+                currentCardIndex = (currentCardIndex - 1 + filteredData.length) % filteredData.length;
             }
             flashcard.classList.remove('flipped');
             updateFlashcard();
         });
 
         nextCardButton.addEventListener('click', () => {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) return;
+            
             if (isReviewingUnknown) {
                 reviewIndex = (reviewIndex + 1) % unknownCards.length;
             } else {
-                currentCardIndex = (currentCardIndex + 1) % studyData.length;
+                currentCardIndex = (currentCardIndex + 1) % filteredData.length;
             }
             flashcard.classList.remove('flipped');
             updateFlashcard();
@@ -1082,7 +1400,13 @@
 
         // Text input functionality
         function updateTextQuestion() {
-            const currentText = studyData[currentTextIndex];
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) {
+                textQuestion.textContent = "No questions available with current filter";
+                return;
+            }
+            
+            const currentText = filteredData[currentTextIndex];
             textQuestion.textContent = `What is the definition of "${currentText.term}"?`;
             textAnswer.value = '';
             textResult.style.display = 'none';
@@ -1090,8 +1414,11 @@
         }
 
         checkTextButton.addEventListener('click', () => {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) return;
+            
             const userAnswer = textAnswer.value.trim().toLowerCase();
-            const correctAns = studyData[currentTextIndex].definition.toLowerCase();
+            const correctAns = filteredData[currentTextIndex].definition.toLowerCase();
             
             // Simple check - in a real app you might use more advanced string similarity
             if (userAnswer === correctAns) {
@@ -1101,19 +1428,25 @@
             } else {
                 textResult.textContent = 'Not quite right. The correct answer is:';
                 textResult.className = 'result incorrect';
-                correctAnswer.textContent = studyData[currentTextIndex].definition;
+                correctAnswer.textContent = filteredData[currentTextIndex].definition;
                 correctAnswer.style.display = 'block';
             }
             textResult.style.display = 'block';
         });
 
         prevTextButton.addEventListener('click', () => {
-            currentTextIndex = (currentTextIndex - 1 + studyData.length) % studyData.length;
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) return;
+            
+            currentTextIndex = (currentTextIndex - 1 + filteredData.length) % filteredData.length;
             updateTextQuestion();
         });
 
         nextTextButton.addEventListener('click', () => {
-            currentTextIndex = (currentTextIndex + 1) % studyData.length;
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) return;
+            
+            currentTextIndex = (currentTextIndex + 1) % filteredData.length;
             updateTextQuestion();
         });
 
@@ -1121,11 +1454,31 @@
         function generateRevisionContent() {
             revisionContent.innerHTML = '';
             
-            studyData.forEach(item => {
+            const filteredData = getFilteredStudyData();
+            if (filteredData.length === 0) {
+                revisionContent.innerHTML = '<p>No revision materials available with current filter</p>';
+                return;
+            }
+            
+            filteredData.forEach(item => {
                 const revisionItem = document.createElement('div');
                 revisionItem.classList.add('revision-item');
                 
-                let contentHTML = `<div class="revision-term">${item.term}</div>`;
+                let contentHTML = `<div class="revision-term">${item.term}`;
+                
+                // Add tag indicators
+                if (item.tags && item.tags.length) {
+                    item.tags.forEach(tag => {
+                        let tagClass = '';
+                        if (tag === 'Information Representation') tagClass = 'tag-info-rep';
+                        if (tag === 'Multimedia') tagClass = 'tag-multimedia';
+                        if (tag === 'Files') tagClass = 'tag-files';
+                        
+                        contentHTML += `<span class="tag-indicator ${tagClass}">${tag}</span>`;
+                    });
+                }
+                
+                contentHTML += `</div>`;
                 contentHTML += `<div class="revision-definition"><strong>Definition:</strong> ${item.definition}</div>`;
                 
                 if (item.encoding) contentHTML += `<div class="revision-encoding"><strong>Encoding:</strong> ${item.encoding}</div>`;
