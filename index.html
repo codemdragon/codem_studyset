@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codem's Study Hub</title>
+    <style>
+        :root {
+            --primary-bg: #0a0a14;
+            --secondary-bg: #12122a;
+            --card-bg: #1a1a3a;
+            --accent-blue: #00aaff;
+            --accent-blue-dark: #0088cc;
+            --text-primary: #ffffff;
+            --text-secondary: #ccccff;
+            --success: #00cc88;
+            --error: #ff3366;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg));
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--accent-blue), #00ddff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tab-btn {
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .tab-btn:hover {
+            background: rgba(0, 170, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .tab-btn.active {
+            background: var(--accent-blue);
+            color: var(--primary-bg);
+            box-shadow: 0 0 15px var(--accent-blue);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .content-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .flashcard {
+            perspective: 1000px;
+            height: 250px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #1f1f4a, #25255a);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .flashcard-back {
+            transform: rotateY(180deg);
+            text-align: left;
+        }
+        
+        .term {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-blue);
+        }
+        
+        .definition {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+        }
+        
+        .formula {
+            background: rgba(0, 170, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+        
+        .example {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            background: var(--accent-blue);
+            color: var(--primary-bg);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: var(--accent-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 170, 255, 0.4);
+        }
+        
+        .question {
+            background: linear-gradient(145deg, #1f1f4a, #25255a);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .option {
+            background: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            background: rgba(0, 170, 255, 0.2);
+        }
+        
+        .option.selected {
+            background: var(--accent-blue);
+            color: var(--primary-bg);
+        }
+        
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .match-item {
+            background: linear-gradient(145deg, #1f1f4a, #25255a);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .match-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 170, 255, 0.3);
+        }
+        
+        .match-item.selected {
+            opacity: 0.6;
+            background: rgba(0, 170, 255, 0.2);
+            border: 2px solid var(--accent-blue);
+        }
+        
+        .text-input {
+            width: 100%;
+            background: var(--secondary-bg);
+            border: 2px solid var(--accent-blue);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .result {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .correct {
+            background: rgba(0, 204, 136, 0.2);
+            border: 2px solid var(--success);
+        }
+        
+        .incorrect {
+            background: rgba(255, 51, 102, 0.2);
+            border: 2px solid var(--error);
+        }
+        
+        .revision-item {
+            background: linear-gradient(145deg, #1f1f4a, #25255a);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .revision-term {
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .progress-info {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .knowledge-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-know {
+            background: var(--success);
+        }
+
+        .btn-dont-know {
+            background: var(--error);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--secondary-bg);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .session-stats {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+
+            .knowledge-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Codem's Study Hub</h1>
+        <p>Master Your Classes Easily</p>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="flashcards">Flashcards</button>
+            <button class="tab-btn" data-tab="multiple-choice">Multiple Choice</button>
+            <button class="tab-btn" data-tab="matching">Matching</button>
+            <button class="tab-btn" data-tab="text-based">Text Input</button>
+            <button class="tab-btn" data-tab="revision">Revision</button>
+        </div>
+        
+        <!-- Flashcards Section -->
+        <div id="flashcards" class="content-section active">
+            <h2>Flashcards</h2>
+            <div class="progress-info">
+                <span id="card-counter">Card 1 of 16</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <div class="term" id="current-term">Bitmap Images</div>
+                        <p>Click to flip</p>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="definition" id="current-definition">Bitmap images are created by assigning a solid color to each pixel using bit patterns.</div>
+                        <div class="formula" id="current-formula"></div>
+                        <div class="example" id="current-example"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="knowledge-buttons">
+                <button class="btn-know" id="know-btn">I Know This</button>
+                <button class="btn-dont-know" id="dont-know-btn">I Don't Know</button>
+            </div>
+            <div class="nav-buttons">
+                <button id="prev-card">Previous</button>
+                <button id="next-card">Next</button>
+            </div>
+            <div class="session-stats" id="session-stats">
+                Known: 0/16 | To Review: 0
+            </div>
+        </div>
+        
+        <!-- Multiple Choice Section -->
+        <div id="multiple-choice" class="content-section">
+            <h2>Multiple Choice Questions</h2>
+            <div class="question">
+                <p id="mc-question">What are bitmap images created by?</p>
+                <div class="options" id="mc-options">
+                    <div class="option" data-correct="true">Assigning a solid color to each pixel using bit patterns</div>
+                    <div class="option">Mathematical formulas defining shapes</div>
+                    <div class="option">A series of vector points</div>
+                    <div class="option">Sound wave amplitudes</div>
+                </div>
+            </div>
+            <button id="check-mc">Check Answer</button>
+            <div class="result" id="mc-result"></div>
+            <div class="nav-buttons">
+                <button id="prev-mc">Previous</button>
+                <button id="next-mc">Next</button>
+            </div>
+        </div>
+        
+        <!-- Matching Section -->
+        <div id="matching" class="content-section">
+            <h2>Matching Exercise</h2>
+            <p>Click items from the left column to match with items on the right</p>
+            <div class="matching-container">
+                <div class="matching-column" id="terms-column">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                <div class="matching-column" id="definitions-column">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+            <button id="check-matching">Check Answers</button>
+            <div class="result" id="matching-result"></div>
+            <button id="new-matching-set" style="margin-top: 15px;">New Set</button>
+        </div>
+        
+        <!-- Text Input Section -->
+        <div id="text-based" class="content-section">
+            <h2>Text Input Exercise</h2>
+            <div class="question">
+                <p id="text-question">What are bitmap images created by?</p>
+                <input type="text" class="text-input" id="text-answer" placeholder="Type your answer here...">
+                <button id="check-text">Check Answer</button>
+                <div class="result" id="text-result"></div>
+                <div class="correct-answer" id="correct-answer"></div>
+            </div>
+            <div class="nav-buttons">
+                <button id="prev-text">Previous</button>
+                <button id="next-text">Next</button>
+            </div>
+        </div>
+        
+        <!-- Revision Section -->
+        <div id="revision" class="content-section">
+            <h2>Revision Materials</h2>
+            <div id="revision-content">
+                <!-- Content will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Study data
+        const studyData = [
+            {
+                term: "Binary Coded Decimal (BCD)",
+                definition: "Binary representation where each positive denary digit is represented by a sequence of 4 bits (nibble).",
+                details: "Only digits 0-9 are converted to BCD because digits greater than 9 are not valid in BCD.",
+                example: "To represent 429 in BCD: 4 = 0100, 2 = 0010, 9 = 1001, concatenated as 0100 0010 1001.",
+                applications: "Used in electronic devices displaying numbers (e.g., calculators), accurately measuring decimal fractions, and coding denary numbers electronically.",
+                extraNote: "If a nibble is greater than 9, add 6 (0110) to correct the BCD representation."
+            },
+            {
+                term: "Two's Complement",
+                definition: "A method to represent negative numbers in binary by using the most significant bit (MSB) as a sign bit.",
+                conversion: "To convert -42 to 8-bit two's complement: 42 in binary = 00101010, flip bits = 11010101, add 1 = 11010110.",
+                reverseConversion: "To convert 11010110 back to denary: flip bits = 00101001, add 1 = 00101010, which is 42, so the number is -42.",
+                range: "Maximum positive number in 8 bits: 127; maximum negative number: -128."
+            },
+            {
+                term: "Hexadecimal Systems - Base 16",
+                definition: "Number system with digits 0-9 and letters A-F representing values 10-15.",
+                applications: "Used in HTML color codes, MAC addresses, assembly languages, machine code, and debugging memory dumps.",
+                examples: "A5 in denary = (16×10) + (1×5) = 165; 65 in hex = 41 (4×16 + 1)."
+            },
+            {
+                term: "Character Sets",
+                definition: "Includes letters, digits, punctuation, and other characters represented by binary codes via character encoding.",
+                standards: "ASCII (7 bits, 128 chars, English alphabet), Extended ASCII (8 bits, 256 chars, European alphabets), Unicode (2 or 4 bytes, global languages).",
+                tradeoff: "ASCII uses less storage; Unicode supports more characters but uses more storage."
+            },
+            {
+                term: "Bitmap Images",
+                definition: "Images created by assigning a solid color to each pixel using bit patterns.",
+                encoding: "Bit patterns correspond to each pixel's color and are mapped onto memory.",
+                pixels: "Pixels are the smallest picture elements represented by binary color codes.",
+                fileHeader: "Contains metadata like image size and number of colors."
+            },
+            {
+                term: "Image Resolution",
+                definition: "Number of pixels that make up an image.",
+                formula: "Number of pixels = width × height",
+                example: "4096×3192 pixels",
+                effect: "Higher resolution results in sharper, more detailed images."
+            },
+            {
+                term: "Screen Resolution",
+                definition: "Number of pixels viewable horizontally and vertically on a device's screen.",
+                formula: "Number of pixels = width × height",
+                example: "1680 × 1080 pixels"
+            },
+            {
+                term: "Colour Depth",
+                definition: "Number of bits used to represent the colour of a single pixel.",
+                formula: "An image with n bits has 2^n colours per pixel",
+                example: "A 16-color bitmap has 4 bits per pixel because 2^4 = 16",
+                effect: "Increasing color depth improves color quality but increases file size.",
+                fileSize: "File Size = Number of Pixels × Color Depth (bits). Convert bits to bytes by dividing by 8."
+            },
+            {
+                term: "Vector Graphics",
+                definition: "Images made up of mathematically defined drawing objects like rectangles, lines, and circles.",
+                drawingList: "Commands defining points, lines, shapes, and their attributes.",
+                properties: "Basic geometric data determine shape and appearance.",
+                encoding: "Encoded using mathematical formulas to draw lines and curves.",
+                scalability: "Can be resized without losing quality.",
+                applications: "Used for logos and graphics requiring scaling."
+            },
+            {
+                term: "Sound",
+                analogueVsDigital: "Analogue data is continuous electrical signals; digital data is discrete signals.",
+                soundSignals: "Sound is vibration through a medium, inherently analogue.",
+                conversion: "Analogue signals are sampled at intervals; samples encoded as binary numbers representing amplitude."
+            },
+            {
+                term: "How Sound is Sampled & Stored",
+                definition: "Measurements of the original sound wave are captured and stored as binary on secondary storage.",
+                details: "Sound waves begin as analogue and for a computer system to understand them they must be converted into a digital form. This process is called Analogue to Digital conversion (A2D).",
+                process: "The process begins by measuring the amplitude of the analogue sound wave at a point in time, called samples. Each measurement (sample) generates a value which can be represented in binary and stored.",
+                result: "Using the samples, a computer is able to create a digital version of the original analogue wave. The digital wave is stored on secondary storage and can be played back at any time by reversing the process."
+            },
+            {
+                term: "Sample Rate",
+                definition: "Sample rate is the amount of samples taken per second of the analogue wave.",
+                details: "Samples are taken each second for the duration of the sound. The sample rate is measured in Hertz (Hz). 1 Hertz is equal to 1 sample of the sound wave."
+            },
+            {
+                term: "Sample Resolution",
+                definition: "Sample resolution is the number of bits stored per sample of sound.",
+                details: "Sample resolution is closely related to the colour depth of a bitmap image; they measure the same thing in different contexts."
+            },
+            {
+                term: "Sampling Rate",
+                definition: "Number of samples taken per unit time.",
+                effect: "Higher sampling rate improves accuracy but increases file size."
+            },
+            {
+                term: "Sampling Resolution",
+                definition: "Number of bits used to encode each sample.",
+                effect: "Higher resolution improves accuracy but increases file size."
+            },
+            {
+                term: "Bit Rate",
+                definition: "Number of bits used to store 1 second of sound.",
+                formula: "Bit Rate = Sampling Rate × Sampling Resolution",
+                length: "Length of sound measured in seconds."
+            },
+            {
+                term: "Compression",
+                definition: "Process of reducing file size without significant quality loss.",
+                benefits: "Faster data transfer, less bandwidth, reduced search time."
+            },
+            {
+                term: "Lossless Compression",
+                definition: "Compression allowing perfect reconstruction of original data.",
+                examples: "Bitmap (.bmp), vector graphics (.svg), PNG images, text file compression, database records.",
+                runLengthEncoding: "Encodes sequences of identical elements as run count and run value."
+            },
+            {
+                term: "Lossy Compression",
+                definition: "Compression that irreversibly removes unnecessary data.",
+                effect: "Lower quality than lossless but much smaller file size (about 10%).",
+                examples: "Sound files (.mp3), JPEG images.",
+                mechanism: "Perceptual coding removes less audible parts of sound."
+            }
+        ];
+
+        // Initialize variables
+        let currentCardIndex = 0;
+        let currentMCIndex = 0;
+        let currentTextIndex = 0;
+        
+        // Track known and unknown cards
+        let knownCards = new Set();
+        let unknownCards = [];
+        let isReviewingUnknown = false;
+        let reviewIndex = 0;
+
+        // Track matching selections
+        let selectedTerm = null;
+        let selectedDefinition = null;
+        let matches = {};
+        
+        // NEW: Track current matching set
+        let currentMatchingSet = [];
+        let currentMCSet = [];
+
+        // DOM elements
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const contentSections = document.querySelectorAll('.content-section');
+        const flashcard = document.querySelector('.flashcard');
+        const currentTerm = document.getElementById('current-term');
+        const currentDefinition = document.getElementById('current-definition');
+        const currentFormula = document.getElementById('current-formula');
+        const currentExample = document.getElementById('current-example');
+        const prevCardButton = document.getElementById('prev-card');
+        const nextCardButton = document.getElementById('next-card');
+        const knowButton = document.getElementById('know-btn');
+        const dontKnowButton = document.getElementById('dont-know-btn');
+        const cardCounter = document.getElementById('card-counter');
+        const progressFill = document.getElementById('progress-fill');
+        const sessionStats = document.getElementById('session-stats');
+        
+        const mcQuestion = document.getElementById('mc-question');
+        const mcOptions = document.getElementById('mc-options');
+        const checkMCButton = document.getElementById('check-mc');
+        const mcResult = document.getElementById('mc-result');
+        const prevMCButton = document.getElementById('prev-mc');
+        const nextMCButton = document.getElementById('next-mc');
+        
+        const termsColumn = document.getElementById('terms-column');
+        const definitionsColumn = document.getElementById('definitions-column');
+        const checkMatchingButton = document.getElementById('check-matching');
+        const matchingResult = document.getElementById('matching-result');
+        const newMatchingSetButton = document.getElementById('new-matching-set');
+        
+        const textQuestion = document.getElementById('text-question');
+        const textAnswer = document.getElementById('text-answer');
+        const checkTextButton = document.getElementById('check-text');
+        const textResult = document.getElementById('text-result');
+        const correctAnswer = document.getElementById('correct-answer');
+        const prevTextButton = document.getElementById('prev-text');
+        const nextTextButton = document.getElementById('next-text');
+        
+        const revisionContent = document.getElementById('revision-content');
+
+        // Utility function to shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // NEW: Generate a random matching set
+        function generateMatchingSet() {
+            // Reset matches
+            matches = {};
+            selectedTerm = null;
+            selectedDefinition = null;
+            matchingResult.style.display = 'none';
+            
+            // Clear columns
+            termsColumn.innerHTML = '';
+            definitionsColumn.innerHTML = '';
+            
+            // Create a copy of studyData and shuffle it
+            const shuffledData = shuffleArray([...studyData]);
+            
+            // Take first 5 items for matching
+            currentMatchingSet = shuffledData.slice(0, 5);
+            
+            // Create term elements
+            currentMatchingSet.forEach((item, index) => {
+                const termElement = document.createElement('div');
+                termElement.classList.add('match-item');
+                termElement.textContent = item.term;
+                termElement.setAttribute('data-id', index);
+                termsColumn.appendChild(termElement);
+            });
+            
+            // Create definition elements and shuffle them
+            const shuffledDefinitions = shuffleArray([...currentMatchingSet]);
+            shuffledDefinitions.forEach((item, index) => {
+                const definitionElement = document.createElement('div');
+                definitionElement.classList.add('match-item');
+                definitionElement.textContent = item.definition;
+                definitionElement.setAttribute('data-id', currentMatchingSet.indexOf(item));
+                definitionsColumn.appendChild(definitionElement);
+            });
+            
+            // Setup event listeners for the new items
+            setupMatching();
+        }
+
+        // NEW: Generate a random multiple choice question
+        function generateMCQuestion() {
+            // Clear previous options
+            mcOptions.innerHTML = '';
+            mcResult.style.display = 'none';
+            
+            // Select a random term from studyData
+            const randomIndex = Math.floor(Math.random() * studyData.length);
+            const correctItem = studyData[randomIndex];
+            
+            // Set the question
+            mcQuestion.textContent = `What is the definition of "${correctItem.term}"?`;
+            
+            // Create the correct option
+            const correctOption = document.createElement('div');
+            correctOption.classList.add('option');
+            correctOption.textContent = correctItem.definition;
+            correctOption.setAttribute('data-correct', 'true');
+            
+            // Create incorrect options from other terms
+            const incorrectOptions = [];
+            const usedIndices = new Set([randomIndex]);
+            
+            while (incorrectOptions.length < 3) {
+                const randomIdx = Math.floor(Math.random() * studyData.length);
+                if (!usedIndices.has(randomIdx)) {
+                    incorrectOptions.push(studyData[randomIdx].definition);
+                    usedIndices.add(randomIdx);
+                }
+            }
+            
+            // Combine and shuffle options
+            const allOptions = [correctItem.definition, ...incorrectOptions];
+            const shuffledOptions = shuffleArray(allOptions);
+            
+            // Add options to the DOM
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.setAttribute('data-correct', option === correctItem.definition ? 'true' : 'false');
+                
+                optionElement.addEventListener('click', () => {
+                    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                    optionElement.classList.add('selected');
+                });
+                
+                mcOptions.appendChild(optionElement);
+            });
+        }
+
+        // Tab switching functionality
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Update active tab button
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show active content section
+                contentSections.forEach(section => section.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                
+                // If matching tab is selected, generate new matching set
+                if (tabId === 'matching') {
+                    generateMatchingSet();
+                }
+                
+                // If multiple choice tab is selected, generate new question
+                if (tabId === 'multiple-choice') {
+                    generateMCQuestion();
+                }
+                
+                // If revision tab is selected, generate revision content
+                if (tabId === 'revision') {
+                    generateRevisionContent();
+                }
+            });
+        });
+
+        // Flashcard functionality
+        function updateFlashcard() {
+            let index;
+            if (isReviewingUnknown) {
+                index = unknownCards[reviewIndex];
+            } else {
+                index = currentCardIndex;
+            }
+            
+            const currentData = studyData[index];
+            currentTerm.textContent = currentData.term;
+            
+            let definitionHTML = currentData.definition;
+            if (currentData.encoding) definitionHTML += `<br><br><strong>Encoding:</strong> ${currentData.encoding}`;
+            if (currentData.pixels) definitionHTML += `<br><br><strong>Pixels:</strong> ${currentData.pixels}`;
+            if (currentData.fileHeader) definitionHTML += `<br><br><strong>File Header:</strong> ${currentData.fileHeader}`;
+            if (currentData.effect) definitionHTML += `<br><br><strong>Effect:</strong> ${currentData.effect}`;
+            if (currentData.applications) definitionHTML += `<br><br><strong>Applications:</strong> ${currentData.applications}`;
+            
+            currentDefinition.innerHTML = definitionHTML;
+            
+            if (currentData.formula) {
+                currentFormula.textContent = `Formula: ${currentData.formula}`;
+                currentFormula.style.display = 'block';
+            } else {
+                currentFormula.style.display = 'none';
+            }
+            
+            if (currentData.example) {
+                currentExample.textContent = `Example: ${currentData.example}`;
+                currentExample.style.display = 'block';
+            } else {
+                currentExample.style.display = 'none';
+            }
+            
+            // Update progress counter
+            if (isReviewingUnknown) {
+                cardCounter.textContent = `Review Card ${reviewIndex + 1} of ${unknownCards.length}`;
+            } else {
+                cardCounter.textContent = `Card ${currentCardIndex + 1} of ${studyData.length}`;
+            }
+            
+            // Update progress bar
+            const progressPercentage = (knownCards.size / studyData.length) * 100;
+            progressFill.style.width = `${progressPercentage}%`;
+            
+            // Update session stats
+            sessionStats.textContent = `Known: ${knownCards.size}/${studyData.length} | To Review: ${unknownCards.length}`;
+        }
+
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+        });
+
+        // Handle "I Know This" button
+        knowButton.addEventListener('click', () => {
+            let index;
+            if (isReviewingUnknown) {
+                index = unknownCards[reviewIndex];
+                // Remove from unknown cards
+                unknownCards.splice(reviewIndex, 1);
+                // Add to known cards
+                knownCards.add(index);
+                
+                // If no more unknown cards, switch back to normal mode
+                if (unknownCards.length === 0) {
+                    isReviewingUnknown = false;
+                    reviewIndex = 0;
+                    currentCardIndex = (currentCardIndex + 1) % studyData.length;
+                } else {
+                    // Stay in review mode but move to next card
+                    reviewIndex = reviewIndex % unknownCards.length;
+                }
+            } else {
+                index = currentCardIndex;
+                knownCards.add(index);
+                // Remove from unknown if it was there
+                const unknownIndex = unknownCards.indexOf(index);
+                if (unknownIndex !== -1) {
+                    unknownCards.splice(unknownIndex, 1);
+                }
+                currentCardIndex = (currentCardIndex + 1) % studyData.length;
+                
+                // If we've completed all cards and there are unknown ones, start reviewing
+                if (currentCardIndex === 0 && unknownCards.length > 0) {
+                    isReviewingUnknown = true;
+                    reviewIndex = 0;
+                }
+            }
+            
+            flashcard.classList.remove('flipped');
+            updateFlashcard();
+        });
+
+        // Handle "I Don't Know" button
+        dontKnowButton.addEventListener('click', () => {
+            let index;
+            if (isReviewingUnknown) {
+                index = unknownCards[reviewIndex];
+                // Move to next card in review
+                reviewIndex = (reviewIndex + 1) % unknownCards.length;
+            } else {
+                index = currentCardIndex;
+                // Add to unknown cards if not already there
+                if (!unknownCards.includes(index)) {
+                    unknownCards.push(index);
+                }
+                // Remove from known cards if it was there
+                if (knownCards.has(index)) {
+                    knownCards.delete(index);
+                }
+                currentCardIndex = (currentCardIndex + 1) % studyData.length;
+                
+                // If we've completed all cards, start reviewing unknown ones
+                if (currentCardIndex === 0 && unknownCards.length > 0) {
+                    isReviewingUnknown = true;
+                    reviewIndex = 0;
+                }
+            }
+            
+            flashcard.classList.remove('flipped');
+            updateFlashcard();
+        });
+
+        prevCardButton.addEventListener('click', () => {
+            if (isReviewingUnknown) {
+                reviewIndex = (reviewIndex - 1 + unknownCards.length) % unknownCards.length;
+            } else {
+                currentCardIndex = (currentCardIndex - 1 + studyData.length) % studyData.length;
+            }
+            flashcard.classList.remove('flipped');
+            updateFlashcard();
+        });
+
+        nextCardButton.addEventListener('click', () => {
+            if (isReviewingUnknown) {
+                reviewIndex = (reviewIndex + 1) % unknownCards.length;
+            } else {
+                currentCardIndex = (currentCardIndex + 1) % studyData.length;
+            }
+            flashcard.classList.remove('flipped');
+            updateFlashcard();
+        });
+
+        // Multiple choice functionality
+        checkMCButton.addEventListener('click', () => {
+            const selectedOption = document.querySelector('.option.selected');
+            if (!selectedOption) {
+                mcResult.textContent = 'Please select an answer.';
+                mcResult.className = 'result incorrect';
+                mcResult.style.display = 'block';
+                return;
+            }
+            
+            const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
+            if (isCorrect) {
+                mcResult.textContent = 'Correct! Well done.';
+                mcResult.className = 'result correct';
+            } else {
+                mcResult.textContent = 'Incorrect. Try again.';
+                mcResult.className = 'result incorrect';
+            }
+            mcResult.style.display = 'block';
+        });
+
+        prevMCButton.addEventListener('click', () => {
+            generateMCQuestion();
+        });
+
+        nextMCButton.addEventListener('click', () => {
+            generateMCQuestion();
+        });
+
+        // Matching functionality
+        function setupMatching() {
+            const matchItems = document.querySelectorAll('.match-item');
+            
+            matchItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Check if item is in the terms column
+                    if (item.parentElement.id === 'terms-column') {
+                        // Deselect all other terms
+                        document.querySelectorAll('#terms-column .match-item').forEach(term => {
+                            term.classList.remove('selected');
+                        });
+                        
+                        // Select this term
+                        item.classList.add('selected');
+                        selectedTerm = item;
+                    } 
+                    // Check if item is in the definitions column
+                    else if (item.parentElement.id === 'definitions-column') {
+                        // Deselect all other definitions
+                        document.querySelectorAll('#definitions-column .match-item').forEach(def => {
+                            def.classList.remove('selected');
+                        });
+                        
+                        // Select this definition
+                        item.classList.add('selected');
+                        selectedDefinition = item;
+                    }
+                    
+                    // If both a term and a definition are selected, check if they match
+                    if (selectedTerm && selectedDefinition) {
+                        const termId = selectedTerm.getAttribute('data-id');
+                        const definitionId = selectedDefinition.getAttribute('data-id');
+                        
+                        if (termId === definitionId) {
+                            // Correct match
+                            selectedTerm.style.background = 'var(--success)';
+                            selectedDefinition.style.background = 'var(--success)';
+                            selectedTerm.classList.remove('selected');
+                            selectedDefinition.classList.remove('selected');
+                            
+                            // Store the match
+                            matches[termId] = true;
+                            
+                            // Reset selections
+                            selectedTerm = null;
+                            selectedDefinition = null;
+                            
+                            // Check if all matches are complete
+                            if (Object.keys(matches).length === currentMatchingSet.length) {
+                                matchingResult.textContent = 'All matches are correct! Well done.';
+                                matchingResult.className = 'result correct';
+                                matchingResult.style.display = 'block';
+                            }
+                        } else {
+                            // Incorrect match - flash red and then reset
+                            selectedTerm.style.background = 'var(--error)';
+                            selectedDefinition.style.background = 'var(--error)';
+                            
+                            setTimeout(() => {
+                                selectedTerm.style.background = '';
+                                selectedDefinition.style.background = '';
+                                selectedTerm.classList.remove('selected');
+                                selectedDefinition.classList.remove('selected');
+                                selectedTerm = null;
+                                selectedDefinition = null;
+                            }, 1000);
+                        }
+                    }
+                });
+            });
+        }
+
+        checkMatchingButton.addEventListener('click', () => {
+            // Check if all matches are correct
+            const allMatched = Object.keys(matches).length === currentMatchingSet.length;
+            
+            if (allMatched) {
+                matchingResult.textContent = 'All matches are correct! Well done.';
+                matchingResult.className = 'result correct';
+            } else {
+                matchingResult.textContent = 'Some matches are incorrect. Keep trying!';
+                matchingResult.className = 'result incorrect';
+            }
+            matchingResult.style.display = 'block';
+        });
+
+        // Text input functionality
+        function updateTextQuestion() {
+            const currentText = studyData[currentTextIndex];
+            textQuestion.textContent = `What is the definition of "${currentText.term}"?`;
+            textAnswer.value = '';
+            textResult.style.display = 'none';
+            correctAnswer.style.display = 'none';
+        }
+
+        checkTextButton.addEventListener('click', () => {
+            const userAnswer = textAnswer.value.trim().toLowerCase();
+            const correctAns = studyData[currentTextIndex].definition.toLowerCase();
+            
+            // Simple check - in a real app you might use more advanced string similarity
+            if (userAnswer === correctAns) {
+                textResult.textContent = 'Correct! Well done.';
+                textResult.className = 'result correct';
+                correctAnswer.style.display = 'none';
+            } else {
+                textResult.textContent = 'Not quite right. The correct answer is:';
+                textResult.className = 'result incorrect';
+                correctAnswer.textContent = studyData[currentTextIndex].definition;
+                correctAnswer.style.display = 'block';
+            }
+            textResult.style.display = 'block';
+        });
+
+        prevTextButton.addEventListener('click', () => {
+            currentTextIndex = (currentTextIndex - 1 + studyData.length) % studyData.length;
+            updateTextQuestion();
+        });
+
+        nextTextButton.addEventListener('click', () => {
+            currentTextIndex = (currentTextIndex + 1) % studyData.length;
+            updateTextQuestion();
+        });
+
+        // Revision content generation
+        function generateRevisionContent() {
+            revisionContent.innerHTML = '';
+            
+            studyData.forEach(item => {
+                const revisionItem = document.createElement('div');
+                revisionItem.classList.add('revision-item');
+                
+                let contentHTML = `<div class="revision-term">${item.term}</div>`;
+                contentHTML += `<div class="revision-definition"><strong>Definition:</strong> ${item.definition}</div>`;
+                
+                if (item.encoding) contentHTML += `<div class="revision-encoding"><strong>Encoding:</strong> ${item.encoding}</div>`;
+                if (item.pixels) contentHTML += `<div class="revision-pixels"><strong>Pixels:</strong> ${item.pixels}</div>`;
+                if (item.fileHeader) contentHTML += `<div class="revision-fileheader"><strong>File Header:</strong> ${item.fileHeader}</div>`;
+                if (item.formula) contentHTML += `<div class="revision-formula"><strong>Formula:</strong> ${item.formula}</div>`;
+                if (item.example) contentHTML += `<div class="revision-example"><strong>Example:</strong> ${item.example}</div>`;
+                if (item.effect) contentHTML += `<div class="revision-effect"><strong>Effect:</strong> ${item.effect}</div>`;
+                if (item.applications) contentHTML += `<div class="revision-applications"><strong>Applications:</strong> ${item.applications}</div>`;
+                if (item.drawingList) contentHTML += `<div class="revision-drawinglist"><strong>Drawing List:</strong> ${item.drawingList}</div>`;
+                if (item.properties) contentHTML += `<div class="revision-properties"><strong>Properties:</strong> ${item.properties}</div>`;
+                if (item.encoding) contentHTML += `<div class="revision-encoding"><strong>Encoding:</strong> ${item.encoding}</div>`;
+                if (item.scalability) contentHTML += `<div class="revision-scalability"><strong>Scalability:</strong> ${item.scalability}</div>`;
+                
+                revisionItem.innerHTML = contentHTML;
+                revisionContent.appendChild(revisionItem);
+            });
+        }
+
+        // Initialize the application
+        updateFlashcard();
+        updateTextQuestion();
+        generateMatchingSet(); // Initialize matching functionality
+        generateMCQuestion(); // Initialize multiple choice questions
+        
+        // Event listener for new matching set button
+        newMatchingSetButton.addEventListener('click', generateMatchingSet);
+    </script>
+</body>
+</html>
