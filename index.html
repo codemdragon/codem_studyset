@@ -959,6 +959,18 @@
                 details: "For example, the sequence AAAABBBCCDAA would be encoded as 4A 3B 2C 1D 2A. The Count and Value can be swapped around.",
                 tags: ["Files"]
             },
+            {
+                term: "File size Calculation for images",
+                definition: "Calculates the file size of an image based on its dimensions and color depth.",
+                details: "The formula for calculating the file size is: Width x Height x Color Depth (in bits) / 8 (to convert to bytes).",
+                tags: ["Files"]
+            },
+            {
+                term: "File size Calculation for sound",
+                definition: "Calculates the file size of a sound file based on its duration and sample rate.",
+                details: "The formula for calculating the file size is: Duration x Sample Rate x Bit Depth (in bits) x Number of Channels / 8 (to convert to bytes).",
+                tags: ["Files"]
+            },
         ];
 
         // Initialize variables
