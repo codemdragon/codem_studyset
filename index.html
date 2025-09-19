@@ -862,6 +862,24 @@
                 details: "In Two's Complement, the most significant bit indicates the sign (0 for positive, 1 for negative). To convert to Binary, subtract 1 and invert the bits for negative numbers.",
                 tags: ["Information Representation"]
             },
+            {
+                term: "Logical Shift",
+                definition: "Shifts all bits in a binary number to the left or right, filling the vacated bits with zeros.",
+                details: "Logical shifts do not preserve the sign bit, making them suitable for unsigned binary numbers.",
+                tags: ["Information Representation"]
+            },
+            {
+                term: "Arithmetic Shift",
+                definition: "Shifts all bits in a binary number to the left or right, preserving the sign bit. Use Two's complement",
+                details: "Arithmetic shifts maintain the sign of signed numbers, making them suitable for signed binary numbers.",
+                tags: ["Information Representation"]
+            },
+            {
+                term: "BCD conversions",
+                definition: "Converts binary numbers to Binary-Coded Decimal (BCD) representation, Convert to denary first then to BCD as each digit must be represented separately",
+                details: "BCD represents each digit of a decimal number with its binary equivalent. For example, the decimal number 45 is represented in BCD as 0100 0101.",
+                tags: ["Information Representation"]
+            },
         ];
 
         // Initialize variables
