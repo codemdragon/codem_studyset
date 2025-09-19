@@ -854,11 +854,13 @@
             {
                 term: "Drawing Property (Vector Graphic)",
                 definition: "Data about the shape defining aspects of its appearance such as colour, line thickness, or font size.",
+                example: "A circle may have properties like radius, fill colour, border colour, and border thickness.",
                 tags: ["Multimedia"]
             },
             {
                 term: "Drawing List (Vector Graphic)",
                 definition: "The list of all drawing objects and commands required to recreate the image.",
+                example: "Square : line colour : black : fill colour : white : x1 : 10 : y1 : 10 : x2 : 50 : y2 : 50",
                 tags: ["Multimedia"]
             },
             {
@@ -932,7 +934,7 @@
             {
                 term: "File Size Calculation (Sound)",
                 definition: "Calculates the file size of a sound file based on duration, sample rate, bit depth, and number of channels.",
-                formula: "File size (bytes) = Duration (seconds) × Sample Rate (Hz) × Bit Depth (bits) × Number of Channels / 8",
+                formula: "File size (bytes) = Duration (seconds) × Sample Rate (Hz) × Bit Depth (bits) × Number of Channels / 8 (Bytes)",
                 tags: ["Files"]
             },
             {
@@ -950,7 +952,13 @@
             {
                 term: "BCD Conversion",
                 definition: "Converts denary numbers to Binary-Coded Decimal by converting each digit separately to its 4-bit binary equivalent.",
-                example: "Decimal 45 is represented in BCD as 0100 0101.",
+                example: "Decimal 45 is represented in BCD as 0100 0101. The plus 6 rule is applied if a nibble exceeds 1001 (9 in decimal) and the carry is counted in the next higher nibble.",
+                tags: ["Information Representation"]
+            },
+            {
+                term: "Sample Rate",
+                definition: "The number of samples of audio carried per second, measured in Hz.",
+                example: "A sample rate of 44.1 kHz means 44,100 samples are taken per second.",
                 tags: ["Information Representation"]
             }
         ];
