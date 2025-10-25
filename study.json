@@ -1,0 +1,297 @@
+[
+  {
+    "term": "Binary Coded Decimal (BCD)",
+    "definition": "Binary representation where each positive denary digit is represented by a sequence of 4 bits (nibble).",
+    "details": "Only digits 0-9 are converted to BCD because digits greater than 9 are not valid in BCD. If a nibble is greater than 9, add 6 (0110) to correct the BCD representation.",
+    "example": "To represent 429 in BCD: 4 = 0100, 2 = 0010, 9 = 1001, concatenated as 0100 0010 1001.",
+    "applications": "Used in electronic devices displaying numbers (e.g., calculators, digital clocks), accurately measuring decimal fractions, coding denary numbers electronically, and storing date/time in BIOS where conversion with denary is easier.",
+    "benefits": "More straightforward to convert between BCD and denary; less complex to encode and decode for programmers; easier for digital equipment to display information; can represent monetary values exactly.",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "Two's Complement",
+    "definition": "A method to represent signed integers in binary by using the most significant bit (MSB) as a sign bit.",
+    "conversion": "To convert a negative number (e.g., -42) to 8-bit two's complement: convert 42 to binary (00101010), flip all bits (11010101), add 1 (11010110).",
+    "reverseConversion": "To convert two's complement binary back to denary: if MSB is 1, flip bits and add 1 to get magnitude, then apply negative sign.",
+    "range": "In 8 bits, maximum positive number is 127; maximum negative number is -128.",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "Hexadecimal System (Base 16)",
+    "definition": "Number system with digits 0-9 and letters A-F representing values 10-15.",
+    "applications": "Used in MAC addresses, HTML colour codes, assembly language, machine code, and debugging memory dumps.",
+    "examples": "A5 in denary = (10×16) + 5 = 165; 65 in hex = 41 (4×16 + 1).",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "Character Sets",
+    "definition": "Collections of characters (letters, digits, punctuation, symbols) represented by unique binary codes via character encoding.",
+    "standards": "ASCII (7-bit, 128 characters, English alphabet), Extended ASCII (8-bit, 256 characters, includes European alphabets), Unicode (16-bit or 32-bit, supports multiple languages and a wide range of characters).",
+    "tradeoff": "ASCII uses less storage but supports fewer characters; Unicode supports many languages but uses more storage.",
+    "similarities": "All can use 8 bits; ASCII is a subset of Unicode and Extended ASCII.",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "ASCII Code",
+    "definition": "Character encoding standard for electronic communication in English, using 7 or 8 bits.",
+    "details": "ASCII stands for American Standard Code for Information Interchange. Each character has a unique code stored in the same order as the text.",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "Unicode",
+    "definition": "Character encoding standard supporting a wide range of characters and symbols from multiple languages, typically 16 or 32 bits long.",
+    "details": "Unicode provides a unique code point for every character regardless of platform, program, or language.",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "Bitmap Graphics",
+    "definition": "Images made up of pixels, each assigned a single colour represented by a unique binary value.",
+    "encoding": "Stored as a sequence of binary numbers representing each pixel's colour.",
+    "properties": "Prone to pixelation when enlarged; larger file size due to storing data for each pixel; can be compressed significantly; editing is more difficult as each pixel must be edited separately.",
+    "fileHeader": "Contains metadata such as file type, compression type, dimensions (width × height), colour depth, image resolution, and file size.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Pixel",
+    "definition": "The smallest addressable element in an image or display.",
+    "details": "Each pixel represents a single point in the image and has a colour value stored in binary.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Image Resolution",
+    "definition": "Total number of pixels in an image.",
+    "formula": "Number of pixels = width × height",
+    "example": "An image with 4096 × 3192 pixels.",
+    "effect": "Higher resolution results in sharper, more detailed images with less pixelation.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Screen Resolution",
+    "definition": "Number of pixels viewable horizontally and vertically on a device's screen.",
+    "formula": "Number of pixels = width × height",
+    "example": "1680 × 1080 pixels.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Colour Depth (Bit Depth)",
+    "definition": "Number of bits used to represent the colour of a single pixel.",
+    "formula": "An image with n bits per pixel can represent 2^n colours.",
+    "example": "A 16-colour bitmap uses 4 bits per pixel because 2^4 = 16.",
+    "effect": "Increasing colour depth increases the range of colours and image quality but also increases file size.",
+    "fileSize": "File size = Number of pixels × Colour depth (bits) / 8 (to convert bits to bytes).",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Vector Graphics",
+    "definition": "Images composed of mathematically defined drawing objects such as lines, shapes, and curves.",
+    "encoding": "Stored as a list of drawing commands and properties (drawing list) that define how to draw each object.",
+    "properties": "Drawing objects have properties defining aspects of appearance (e.g., colour, line thickness).",
+    "scalability": "Can be resized or scaled without loss of quality or pixelation.",
+    "fileSize": "Typically smaller file size as only instructions are stored, but do not compress well due to little redundant data.",
+    "applications": "Used for logos, fonts, and graphics requiring frequent resizing or editing.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Drawing Object (Vector Graphic)",
+    "definition": "A component of a vector graphic created using a formula or command.",
+    "details": "Examples include rectangles, circles, lines, and curves defined by coordinates and properties.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Drawing Property (Vector Graphic)",
+    "definition": "Data about the shape defining aspects of its appearance such as colour, line thickness, or font size.",
+    "example": "A circle may have properties like radius, fill colour, border colour, and border thickness.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Drawing List (Vector Graphic)",
+    "definition": "The list of all drawing objects and commands required to recreate the image.",
+    "example": "Square : line colour : black : fill colour : white : x1 : 10 : y1 : 10 : x2 : 50 : y2 : 50",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Sound Representation",
+    "definition": "Sound is vibration through a medium and is inherently analogue; to store digitally, amplitude is sampled at regular intervals and each sample is encoded as a binary number.",
+    "analogueVsDigital": "Analogue data is continuous and variable; digital data is discrete and quantised.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Sampling",
+    "definition": "Taking measurements of the amplitude of an analogue sound wave at regular intervals and storing these values.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Sampling Rate",
+    "definition": "Number of samples taken per second, measured in Hertz (Hz).",
+    "effect": "Higher sampling rate reduces gaps between samples, reduces quantisation errors, improves accuracy of digital waveform resembling the analogue wave, but increases file size.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Sampling Resolution (Bit Depth)",
+    "definition": "Number of bits used to store each sample of sound.",
+    "effect": "Higher sampling resolution allows a wider range of amplitudes to be represented, improves accuracy, reduces quantisation errors, but increases file size.",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Bit Rate (Sound)",
+    "definition": "Number of bits used to store one second of sound.",
+    "formula": "Bit Rate = Sampling Rate × Sampling Resolution",
+    "tags": [
+      "Multimedia"
+    ]
+  },
+  {
+    "term": "Compression",
+    "definition": "Process of reducing file size to save storage space and reduce transmission time.",
+    "benefits": "Reduces file size, faster download/upload, less bandwidth usage, allows sending large files via email or web.",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "Lossy Compression",
+    "definition": "Compression method that irreversibly removes some data, resulting in loss of quality.",
+    "effect": "File size is significantly reduced (often to about 10% of original), but original data cannot be fully restored.",
+    "applications": "Used when some quality loss is acceptable, e.g., images (JPEG), sound files (MP3), videos.",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "Lossless Compression",
+    "definition": "Compression method that preserves all original data, allowing perfect reconstruction.",
+    "applications": "Used when all data is needed, e.g., text files, database records, high-quality images (PNG), bitmap and vector graphics.",
+    "methods": "Includes Run-Length Encoding (RLE) which encodes sequences of identical elements as a single value and count.",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "Run-Length Encoding (RLE)",
+    "definition": "A lossless compression technique that replaces consecutive repeated characters or pixels with a single value and a count.",
+    "example": "The sequence AAAABBBCCDAA is encoded as 4A 3B 2C 1D 2A.",
+    "limitations": "Ineffective if data has few repeated sequences; can increase file size if many single occurrences.",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "File Header",
+    "definition": "Metadata at the beginning of a file describing its format and content.",
+    "details": "Includes file type, compression type, image dimensions, colour depth, resolution, and file size.",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "File Size Calculation (Images)",
+    "definition": "Calculates the file size of an image based on its dimensions and colour depth.",
+    "formula": "File size (bytes) = Width × Height × Colour Depth (bits) / 8",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "File Size Calculation (Sound)",
+    "definition": "Calculates the file size of a sound file based on duration, sample rate, bit depth, and number of channels.",
+    "formula": "File size (bytes) = Duration (seconds) × Sample Rate (Hz) × Bit Depth (bits) × Number of Channels / 8 (Bytes)",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "Logical Shift",
+    "definition": "Shifts all bits in a binary number left or right, filling vacated bits with zeros.",
+    "details": "Does not preserve the sign bit; suitable for unsigned binary numbers.",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "Arithmetic Shift",
+    "definition": "Shifts all bits in a binary number left or right, preserving the sign bit (MSB).",
+    "details": "Used with signed binary numbers in two's complement representation to maintain sign.",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "BCD Conversion",
+    "definition": "Converts denary numbers to Binary-Coded Decimal by converting each digit separately to its 4-bit binary equivalent.",
+    "example": "Decimal 45 is represented in BCD as 0100 0101. The plus 6 rule is applied if a nibble exceeds 1001 (9 in decimal) and the carry is counted in the next higher nibble.",
+    "tags": [
+      "Information Representation"
+    ]
+  },
+  {
+    "term": "Sample Rate",
+    "definition": "The number of samples of audio carried per second, measured in Hz.",
+    "example": "A sample rate of 44.1 kHz means 44,100 samples are taken per second.",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "Unit conversions (File Size)",
+    "definition": "Converts file sizes between different units (e.g., bytes, kilobytes, megabytes).",
+    "details": " 1Bit x 4 = 1Nibble, 1Bit x 8 = 1Byte(B), 1B x 1000 = 1KB(Kilobyte), 1KB x 1000 = 1MB(Megabyte), 1MB x 1000 = 1GB(Gigabyte), 1GB x 1000 = 1TB(Terabyte). ALSO 1B x 1024 = 1KiB(Kibibyte), 1KiB x 1024 = 1MiB(Mebibyte), 1MiB x 1024 = 1GiB(Gibibyte), 1GiB x 1024 = 1TiB(Trebibyte).",
+    "example": "1 MB = 1000 KB = 1,000,000 bytes.",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "Lossy Bitmaps",
+    "definition": "Reduces File size by removing data that is less likely to be noticed by the human eye",
+    "details": "For instance Similar pixels in color variation or subtle color variation",
+    "tags": [
+      "Files"
+    ]
+  },
+  {
+    "term": "Lossy Sound File",
+    "definition": "Reduces File size by removing frequencies outside the human hearing range ",
+    "details": "mp3, etc",
+    "tags": [
+      "Files"
+    ]
+  }
+]
