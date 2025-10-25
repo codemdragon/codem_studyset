@@ -5,6 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Codem's Study Hub</title>
     <style>
+        /* Previous CSS remains the same, adding new styles for ordering exercise */
+        
+        /* Ordering Exercise Styles */
+        .ordering-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .ordering-instructions {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        
+        .ordering-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .ordering-item {
+            background: linear-gradient(145deg, #1f1f4a, #25255a);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: move;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            user-select: none;
+        }
+        
+        .ordering-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 170, 255, 0.3);
+        }
+        
+        .ordering-item.dragging {
+            opacity: 0.5;
+            border: 2px dashed var(--accent-blue);
+        }
+        
+        .ordering-item.correct {
+            background: rgba(0, 204, 136, 0.2);
+            border: 2px solid var(--success);
+        }
+        
+        .ordering-item.incorrect {
+            background: rgba(255, 51, 102, 0.2);
+            border: 2px solid var(--error);
+        }
+        
+        .ordering-item-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background: var(--accent-blue);
+            color: var(--primary-bg);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .ordering-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .ordering-hint {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 170, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            color: var(--text-secondary);
+            display: none;
+        }
+        
+        /* Rest of the CSS remains the same */
         :root {
             --primary-bg: #0a0a14;
             --secondary-bg: #12122a;
@@ -549,6 +633,10 @@
             .form-container {
                 height: 500px;
             }
+            
+            .ordering-controls {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 480px) {
@@ -672,6 +760,7 @@
             <button class="tab-btn" data-tab="multiple-choice">Multiple Choice</button>
             <button class="tab-btn" data-tab="matching">Matching</button>
             <button class="tab-btn" data-tab="text-based">Text Input</button>
+            <button class="tab-btn" data-tab="ordering">Ordering</button>
             <button class="tab-btn" data-tab="revision">Revision</button>
             <button class="tab-btn form" data-tab="quiz-form">Contribute to Website</button>
         </div>
@@ -758,6 +847,27 @@
             </div>
         </div>
         
+        <div id="ordering" class="content-section">
+            <h2>Ordering Exercise</h2>
+            <p class="ordering-instructions">Drag and drop the steps to arrange them in the correct order</p>
+            <div class="ordering-container">
+                <div class="ordering-items" id="ordering-items">
+                    <!-- Items will be dynamically added here -->
+                </div>
+            </div>
+            <div class="ordering-hint" id="ordering-hint"></div>
+            <div class="ordering-controls">
+                <button id="check-ordering">Check Order</button>
+                <button id="reset-ordering">Reset Order</button>
+                <button id="show-hint">Show Hint</button>
+            </div>
+            <div class="result" id="ordering-result"></div>
+            <div class="nav-buttons">
+                <button id="prev-ordering">Previous</button>
+                <button id="next-ordering">Next</button>
+            </div>
+        </div>
+        
         <div id="revision" class="content-section">
             <h2>Revision Materials</h2>
             <button id="download-pdf" class="pdf-download">Download as PDF</button>
@@ -787,6 +897,7 @@
         let currentCardIndex = 0;
         let currentMCIndex = 0;
         let currentTextIndex = 0;
+        let currentOrderingIndex = 0;
         let selectedTopic = "all";
         
         // Track known and unknown cards
@@ -807,6 +918,26 @@
         // Store the current question objects
         let currentMCQuestionObject = null;
         let currentTextQuestionObject = null;
+        
+        // Ordering exercises data
+        let orderingExercises = [
+            {
+                title: "Fetch-Decode-Execute Cycle",
+                description: "Arrange the steps of the FDE cycle in the correct order",
+                correctOrder: [
+                    "PC → MAR",
+                    "MAR → MDR",
+                    "MDR → CIR", 
+                    "PC+1",
+                    "Decode",
+                    "Execute",
+                    "(Interrupt OR ACC result) If no interrupt go back to PC"
+                ],
+                hint: "The cycle starts with the Program Counter and ends with either an interrupt or storing the result",
+                tags: ["Processor"]
+            }
+            // More ordering exercises can be added here in the future
+        ];
 
         // DOM elements
         const topicButtons = document.querySelectorAll('.topic-btn');
@@ -846,6 +977,15 @@
         const prevTextButton = document.getElementById('prev-text');
         const nextTextButton = document.getElementById('next-text');
         
+        const orderingItems = document.getElementById('ordering-items');
+        const checkOrderingButton = document.getElementById('check-ordering');
+        const resetOrderingButton = document.getElementById('reset-ordering');
+        const showHintButton = document.getElementById('show-hint');
+        const orderingResult = document.getElementById('ordering-result');
+        const orderingHint = document.getElementById('ordering-hint');
+        const prevOrderingButton = document.getElementById('prev-ordering');
+        const nextOrderingButton = document.getElementById('next-ordering');
+        
         const revisionContent = document.getElementById('revision-content');
         const downloadPdfButton = document.getElementById('download-pdf');
 
@@ -860,6 +1000,7 @@
                 updateMCQuestion();
                 updateTextQuestion();
                 generateMatchingSet();
+                generateOrderingExercise();
             } catch (error) {
                 console.error('Error loading study data:', error);
                 currentTerm.textContent = "Error loading study data. Please check if study.json exists.";
@@ -1032,6 +1173,7 @@
                 currentCardIndex = 0;
                 currentMCIndex = 0;
                 currentTextIndex = 0;
+                currentOrderingIndex = 0;
                 knownCards.clear();
                 unknownCards = [];
                 isReviewingUnknown = false;
@@ -1042,6 +1184,7 @@
                 generateMatchingSet();
                 updateMCQuestion();
                 updateTextQuestion();
+                generateOrderingExercise();
                 
                 // If revision tab is active, regenerate content
                 if (document.getElementById('revision').classList.contains('active')) {
@@ -1071,6 +1214,11 @@
                 // If multiple choice tab is selected, generate new question
                 if (tabId === 'multiple-choice') {
                     updateMCQuestion();
+                }
+                
+                // If ordering tab is selected, generate ordering exercise
+                if (tabId === 'ordering') {
+                    generateOrderingExercise();
                 }
                 
                 // If revision tab is selected, generate revision content
@@ -1433,6 +1581,167 @@
             
             currentTextIndex = (currentTextIndex + 1) % filteredData.length;
             updateTextQuestion(); // This will pick a new random question for the new term
+        });
+
+        // Ordering Exercise Functionality
+        function generateOrderingExercise() {
+            // Clear previous content
+            orderingItems.innerHTML = '';
+            orderingResult.style.display = 'none';
+            orderingHint.style.display = 'none';
+            
+            // Get the current ordering exercise
+            const currentExercise = orderingExercises[currentOrderingIndex];
+            
+            // Check if the exercise is relevant to the current topic filter
+            if (selectedTopic !== "all" && 
+                currentExercise.tags && 
+                !currentExercise.tags.includes(selectedTopic)) {
+                orderingItems.innerHTML = '<p>No ordering exercises available with current filter</p>';
+                return;
+            }
+            
+            // Shuffle the steps
+            const shuffledSteps = shuffleArray([...currentExercise.correctOrder]);
+            
+            // Create draggable items
+            shuffledSteps.forEach((step, index) => {
+                const item = document.createElement('div');
+                item.classList.add('ordering-item');
+                item.setAttribute('draggable', 'true');
+                item.setAttribute('data-index', index);
+                item.innerHTML = `<span class="ordering-item-number">${index + 1}</span>${step}`;
+                orderingItems.appendChild(item);
+            });
+            
+            // Setup drag and drop functionality
+            setupDragAndDrop();
+        }
+
+        function setupDragAndDrop() {
+            const items = document.querySelectorAll('.ordering-item');
+            let draggedItem = null;
+            
+            items.forEach(item => {
+                // Drag start
+                item.addEventListener('dragstart', function() {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.classList.add('dragging');
+                    }, 0);
+                });
+                
+                // Drag end
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                });
+                
+                // Drag over
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+                
+                // Drag enter
+                item.addEventListener('dragenter', function(e) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                });
+                
+                // Drag leave
+                item.addEventListener('dragleave', function() {
+                    this.classList.remove('dragover');
+                });
+                
+                // Drop
+                item.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                    
+                    if (draggedItem !== this) {
+                        const allItems = Array.from(orderingItems.children);
+                        const draggedIndex = allItems.indexOf(draggedItem);
+                        const dropIndex = allItems.indexOf(this);
+                        
+                        if (draggedIndex < dropIndex) {
+                            orderingItems.insertBefore(draggedItem, this.nextSibling);
+                        } else {
+                            orderingItems.insertBefore(draggedItem, this);
+                        }
+                        
+                        // Update numbers
+                        updateOrderingNumbers();
+                    }
+                });
+            });
+        }
+
+        function updateOrderingNumbers() {
+            const items = document.querySelectorAll('.ordering-item');
+            items.forEach((item, index) => {
+                const numberSpan = item.querySelector('.ordering-item-number');
+                numberSpan.textContent = index + 1;
+            });
+        }
+
+        // Check ordering button
+        checkOrderingButton.addEventListener('click', () => {
+            const currentExercise = orderingExercises[currentOrderingIndex];
+            const items = Array.from(orderingItems.children);
+            const userOrder = items.map(item => item.textContent.replace(/^\d+/, '').trim());
+            
+            const isCorrect = JSON.stringify(userOrder) === JSON.stringify(currentExercise.correctOrder);
+            
+            if (isCorrect) {
+                orderingResult.textContent = 'Correct! The order is right.';
+                orderingResult.className = 'result correct';
+                
+                // Highlight correct items
+                items.forEach(item => {
+                    item.classList.add('correct');
+                    item.classList.remove('incorrect');
+                });
+            } else {
+                orderingResult.textContent = 'Not quite right. Try again!';
+                orderingResult.className = 'result incorrect';
+                
+                // Highlight incorrect items
+                items.forEach((item, index) => {
+                    if (userOrder[index] === currentExercise.correctOrder[index]) {
+                        item.classList.add('correct');
+                        item.classList.remove('incorrect');
+                    } else {
+                        item.classList.add('incorrect');
+                        item.classList.remove('correct');
+                    }
+                });
+            }
+            
+            orderingResult.style.display = 'block';
+        });
+
+        // Reset ordering button
+        resetOrderingButton.addEventListener('click', () => {
+            generateOrderingExercise();
+        });
+
+        // Show hint button
+        showHintButton.addEventListener('click', () => {
+            const currentExercise = orderingExercises[currentOrderingIndex];
+            orderingHint.textContent = currentExercise.hint;
+            orderingHint.style.display = 'block';
+        });
+
+        // Previous ordering button
+        prevOrderingButton.addEventListener('click', () => {
+            currentOrderingIndex = (currentOrderingIndex - 1 + orderingExercises.length) % orderingExercises.length;
+            generateOrderingExercise();
+        });
+
+        // Next ordering button
+        nextOrderingButton.addEventListener('click', () => {
+            currentOrderingIndex = (currentOrderingIndex + 1) % orderingExercises.length;
+            generateOrderingExercise();
         });
 
         // Revision content generation - UPDATED TO SHOW ALL DATA
