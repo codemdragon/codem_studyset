@@ -19,6 +19,7 @@
             --multimedia: #9966cc;
             --files: #66cc99;
             --form-color: #ffcc66;
+            --processor: #ff6699;
         }
         
         * {
@@ -97,6 +98,11 @@
         
         .topic-btn.files {
             background-color: var(--files);
+            color: var(--primary-bg);
+        }
+        
+        .topic-btn.processor {
+            background-color: var(--processor);
             color: var(--primary-bg);
         }
         
@@ -440,6 +446,11 @@
             color: var(--primary-bg);
         }
         
+        .tag-processor {
+            background-color: var(--processor);
+            color: var(--primary-bg);
+        }
+        
         .tag-form {
             background-color: var(--form-color);
             color: var(--primary-bg);
@@ -702,12 +713,12 @@
         <div id="multiple-choice" class="content-section">
             <h2>Multiple Choice Questions</h2>
             <div class="question">
-                <p id="mc-question">What is Binary Coded Decimal (BCD)?</p>
+                <p id="mc-question">What does BCD stand for?</p>
                 <div class="options" id="mc-options">
-                    <div class="option" data-correct="true">Binary representation where each positive denary digit is represented by a sequence of 4 bits</div>
-                    <div class="option">A method to represent signed integers in binary</div>
-                    <div class="option">A number system with digits 0-9 and letters A-F</div>
-                    <div class="option">A character encoding standard</div>
+                    <div class="option" data-correct="true">Binary Coded Decimal</div>
+                    <div class="option">Binary Character Decimal</div>
+                    <div class="option">Basic Computer Data</div>
+                    <div class="option">Binary Code Digit</div>
                 </div>
             </div>
             <button id="check-mc">Check Answer</button>
@@ -735,7 +746,7 @@
         <div id="text-based" class="content-section">
             <h2>Text Input Exercise</h2>
             <div class="question">
-                <p id="text-question">What is Binary Coded Decimal (BCD)?</p>
+                <p id="text-question">What does BCD stand for?</p>
                 <input type="text" class="text-input" id="text-answer" placeholder="Type your answer here...">
                 <button id="check-text">Check Answer</button>
                 <div class="result" id="text-result"></div>
@@ -793,7 +804,8 @@
         let currentMatchingSet = [];
         let currentMCSet = [];
         
-        // *** NEW ***: Store the current text question object
+        // Store the current question objects
+        let currentMCQuestionObject = null;
         let currentTextQuestionObject = null;
 
         // DOM elements
@@ -845,9 +857,9 @@
                 
                 // Initialize the application after data is loaded
                 updateFlashcard();
+                updateMCQuestion();
                 updateTextQuestion();
                 generateMatchingSet();
-                generateMCQuestion();
             } catch (error) {
                 console.error('Error loading study data:', error);
                 currentTerm.textContent = "Error loading study data. Please check if study.json exists.";
@@ -920,8 +932,8 @@
             setupMatching();
         }
 
-        // Generate a random multiple choice question
-        function generateMCQuestion() {
+        // Generate a random multiple choice question using the questions array
+        function updateMCQuestion() {
             const filteredData = getFilteredStudyData();
             if (filteredData.length === 0) {
                 mcQuestion.textContent = "No questions available with current filter";
@@ -937,24 +949,45 @@
             const randomIndex = Math.floor(Math.random() * filteredData.length);
             const correctItem = filteredData[randomIndex];
             
-            // Set the question
-            mcQuestion.textContent = `What is the definition of "${correctItem.term}"?`;
+            // Check if the term has specific questions
+            if (correctItem.questions && correctItem.questions.length > 0) {
+                // Select a random question object
+                currentMCQuestionObject = correctItem.questions[Math.floor(Math.random() * correctItem.questions.length)];
+            } else {
+                // Fallback to default definition question
+                currentMCQuestionObject = {
+                    q: `What is the definition of "${correctItem.term}"?`,
+                    a: correctItem.definition
+                };
+            }
+            
+            // Set the question text from the chosen object
+            mcQuestion.textContent = currentMCQuestionObject.q;
             
             // Create the correct option
             const correctOption = document.createElement('div');
             correctOption.classList.add('option');
-            correctOption.textContent = correctItem.definition;
+            correctOption.textContent = currentMCQuestionObject.a;
             correctOption.setAttribute('data-correct', 'true');
             
-            // Create incorrect options from other terms
+            // Create incorrect options from other questions
             const incorrectOptions = [];
-            const usedIndices = new Set([randomIndex]);
+            const usedAnswers = new Set([currentMCQuestionObject.a]);
             
-            while (incorrectOptions.length < 3 && usedIndices.size < filteredData.length) {
-                const randomIdx = Math.floor(Math.random() * filteredData.length);
-                if (!usedIndices.has(randomIdx)) {
-                    incorrectOptions.push(filteredData[randomIdx].definition);
-                    usedIndices.add(randomIdx);
+            // Try to get answers from other questions
+            for (let i = 0; i < filteredData.length && incorrectOptions.length < 3; i++) {
+                const item = filteredData[i];
+                if (item.questions && item.questions.length > 0) {
+                    for (let j = 0; j < item.questions.length && incorrectOptions.length < 3; j++) {
+                        const answer = item.questions[j].a;
+                        if (!usedAnswers.has(answer)) {
+                            incorrectOptions.push(answer);
+                            usedAnswers.add(answer);
+                        }
+                    }
+                } else if (!usedAnswers.has(item.definition)) {
+                    incorrectOptions.push(item.definition);
+                    usedAnswers.add(item.definition);
                 }
             }
             
@@ -964,7 +997,7 @@
             }
             
             // Combine and shuffle options
-            const allOptions = [correctItem.definition, ...incorrectOptions];
+            const allOptions = [currentMCQuestionObject.a, ...incorrectOptions];
             const shuffledOptions = shuffleArray(allOptions);
             
             // Add options to the DOM
@@ -972,7 +1005,7 @@
                 const optionElement = document.createElement('div');
                 optionElement.classList.add('option');
                 optionElement.textContent = option;
-                optionElement.setAttribute('data-correct', option === correctItem.definition ? 'true' : 'false');
+                optionElement.setAttribute('data-correct', option === currentMCQuestionObject.a ? 'true' : 'false');
                 
                 optionElement.addEventListener('click', () => {
                     document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
@@ -997,6 +1030,8 @@
                 
                 // Reset study progress for new filtered set
                 currentCardIndex = 0;
+                currentMCIndex = 0;
+                currentTextIndex = 0;
                 knownCards.clear();
                 unknownCards = [];
                 isReviewingUnknown = false;
@@ -1005,7 +1040,7 @@
                 // Update all study sections with filtered data
                 updateFlashcard();
                 generateMatchingSet();
-                generateMCQuestion();
+                updateMCQuestion();
                 updateTextQuestion();
                 
                 // If revision tab is active, regenerate content
@@ -1035,7 +1070,7 @@
                 
                 // If multiple choice tab is selected, generate new question
                 if (tabId === 'multiple-choice') {
-                    generateMCQuestion();
+                    updateMCQuestion();
                 }
                 
                 // If revision tab is selected, generate revision content
@@ -1233,11 +1268,11 @@
         });
 
         prevMCButton.addEventListener('click', () => {
-            generateMCQuestion();
+            updateMCQuestion();
         });
 
         nextMCButton.addEventListener('click', () => {
-            generateMCQuestion();
+            updateMCQuestion();
         });
 
         // Matching functionality
@@ -1327,7 +1362,7 @@
             matchingResult.style.display = 'block';
         });
 
-        // *** UPDATED *** Text input functionality
+        // Text input functionality
         function updateTextQuestion() {
             const filteredData = getFilteredStudyData();
             if (filteredData.length === 0) {
@@ -1359,7 +1394,7 @@
             correctAnswer.style.display = 'none';
         }
 
-        // *** UPDATED *** Check text button listener
+        // Check text button listener
         checkTextButton.addEventListener('click', () => {
             if (!currentTextQuestionObject) {
                 console.error("No currentTextQuestionObject is set.");
@@ -1423,6 +1458,7 @@
                         if (tag === 'Information Representation') tagClass = 'tag-info-rep';
                         if (tag === 'Multimedia') tagClass = 'tag-multimedia';
                         if (tag === 'Files') tagClass = 'tag-files';
+                        if (tag === 'Processor') tagClass = 'tag-processor';
                         
                         contentHTML += `<span class="tag-indicator ${tagClass}">${tag}</span>`;
                     });
@@ -1451,6 +1487,18 @@
                         `;
                     }
                 });
+                
+                // Add questions if available
+                if (item.questions && item.questions.length > 0) {
+                    contentHTML += `<div class="revision-property">
+                        <div class="revision-property-title">Questions:</div>`;
+                    
+                    item.questions.forEach(qa => {
+                        contentHTML += `<div><strong>Q:</strong> ${qa.q}<br><strong>A:</strong> ${qa.a}</div>`;
+                    });
+                    
+                    contentHTML += `</div>`;
+                }
                 
                 revisionItem.innerHTML = contentHTML;
                 revisionContent.appendChild(revisionItem);
@@ -1554,6 +1602,38 @@
                         yPosition += splitText.length * lineHeight + 5;
                     }
                 });
+                
+                // Add questions if available
+                if (item.questions && item.questions.length > 0) {
+                    if (yPosition > pageHeight - 50) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Questions:', margin, yPosition);
+                    yPosition += 6;
+                    
+                    doc.setFont(undefined, 'normal');
+                    item.questions.forEach(qa => {
+                        if (yPosition > pageHeight - 30) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+                        
+                        const qText = `Q: ${qa.q}`;
+                        const aText = `A: ${qa.a}`;
+                        
+                        const splitQ = doc.splitTextToSize(qText, doc.internal.pageSize.width - 2 * margin);
+                        doc.text(splitQ, margin, yPosition);
+                        yPosition += splitQ.length * lineHeight;
+                        
+                        const splitA = doc.splitTextToSize(aText, doc.internal.pageSize.width - 2 * margin);
+                        doc.text(splitA, margin, yPosition);
+                        yPosition += splitA.length * lineHeight + 5;
+                    });
+                }
                 
                 // Add space between items
                 yPosition += 10;
