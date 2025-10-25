@@ -550,6 +550,36 @@
       {"q": "In RTN, what do double brackets mean, as in 'MDR <- [[MAR]]'?", "a": "Copies data stored in the mentioned address"}
     ]
   },
+    {
+    "term": "Fetch–Decode–Execute Cycle (FDE Cycle)",
+    "definition": "The continuous cycle used by the CPU to fetch instructions from memory, decode them, and execute them.",
+    "details": "It involves multiple components: PC → MAR → MDR → CIR → PC+1 → Decode → Execute. If an interrupt occurs, the cycle handles it before continuing execution.",
+    "order": "1. PC sends address to MAR → 2. MAR sends it via Address Bus → 3. Memory sends data to MDR → 4. MDR transfers instruction to CIR → 5. PC increments (PC+1) → 6. Decode → 7. Execute (result stored in ACC or next step).",
+    "tags": ["Processor"],
+    "questions": [
+        {"q": "What does FDE stand for?", "a": "Fetch–Decode–Execute"},
+        {"q": "What is the order of the FDE cycle?", "a": "PC → MAR → MDR → CIR → PC+1 → Decode → Execute"},
+        {"q": "What register stores the address of the next instruction?", "a": "Program Counter (PC)"},
+        {"q": "Which register holds the address of the memory location to be accessed?", "a": "Memory Address Register (MAR)"},
+        {"q": "Which register stores the data fetched from memory?", "a": "Memory Data Register (MDR)"},
+        {"q": "Which register holds the instruction currently being executed?", "a": "Current Instruction Register (CIR)"},
+        {"q": "What happens after the instruction is fetched into the CIR?", "a": "It is decoded and then executed"},
+        {"q": "Where is the result of execution often stored?", "a": "Accumulator (ACC)"},
+        {"q": "What does the system clock do in the CPU?", "a": "It generates regular timing signals to synchronise operations"},
+        {"q": "Is RAM part of the processor?", "a": "No"},
+        {"q": "Which register in the ALU temporarily holds arithmetic and logic results?", "a": "Accumulator (ACC)"},
+        {"q": "What does the ACC stand for?", "a": "Accumulator"},
+        {"q": "What two registers belong to the Memory Unit?", "a": "MAR and MDR"},
+        {"q": "What is the IAS?", "a": "Immediate Access Store – another name for main memory"},
+        {"q": "What are the three types of buses in a CPU system?", "a": "Address Bus, Data Bus, Control Bus"},
+        {"q": "Which bus is uni-directional and carries addresses from CPU to Memory?", "a": "Address Bus"},
+        {"q": "Which bus is bi-directional and carries data both ways?", "a": "Data Bus"},
+        {"q": "Which bus carries timing and control signals?", "a": "Control Bus"},
+        {"q": "What direction do buses connect for the CPU?", "a": "Address Bus: Out; Data Bus: In/Out; Control Bus: In/Out"},
+        {"q": "What direction do buses connect for the Memory Unit?", "a": "Address Bus: In; Data Bus: In/Out; Control Bus: In/Out"},
+        {"q": "What direction do buses connect for I/O Devices?", "a": "Address Bus: In; Data Bus: In/Out; Control Bus: In/Out"}
+    ]
+    },
   {
     "term": "Lossy Sound File",
     "definition": "Reduces File size by removing frequencies outside the human hearing range ",
