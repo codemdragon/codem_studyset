@@ -436,13 +436,13 @@
   },
   {
     "term": "Data Bus",
-    "definition": "Bi directional(Two way), Used to carry instructions, data, addresses, Bus width is important and shows amount of data a bus can carry in one cycle",
+    "definition": "Bi directional(Two way), Used to carry instructions and data Bus width is important and shows amount of data a bus can carry in one cycle",
     "details": "The data bus carries the actual data being transferred.",
     "tags": ["Processor"],
     "questions": [
       {"q": "Is the Data Bus uni-directional or bi-directional?", "a": "Bi-directional"},
       {"q": "What does the 'bus width' of a Data Bus indicate?", "a": "Amount of data a bus can carry in one cycle"},
-      {"q": "What three things does the Data Bus carry?", "a": "instructions, data, addresses"}
+      {"q": "What two things does the Data Bus carry?", "a": "instructions, data"}
     ]
   },
   {
